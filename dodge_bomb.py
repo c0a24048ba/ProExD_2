@@ -138,6 +138,7 @@ def main():
         screen.blit(bb_img, bb_rct)
         if kk_rct.colliderect(bb_rct):
             gameover(screen)
+            return
         kk_img = get_kk_img((0, 0))
         kk_img = get_kk_img(tuple(sum_mv))
         pg.display.update()
