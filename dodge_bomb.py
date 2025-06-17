@@ -60,6 +60,14 @@ def init_bb_imgs() -> tuple[list[pg.Surface],list[int]]:
 
     return bb_imgs,bb_accs
 
+def get_kk_img(sum_mv: tuple[int, int]) -> pg.Surface:
+    base_img = pg.image.load("fig/3.png")
+    kk_img_dict = {
+        (0, 0): pg.transform.rotozoom(base_img, 0, 0.9),
+        (+5, 0): pg.transform.rotozoom(base_img, 135, 0.9),
+    }
+    return kk_img_dict.get(sum_mv, kk_img_dict[(0, 0)])
+
 
 
 
@@ -115,10 +123,12 @@ def main():
         if check_bound(kk_rct) != (True,True):
             kk_rct.move_ip(-sum_mv[0],-sum_mv[1])
         screen.blit(kk_img, kk_rct)
+
         bb_imgs,bb_accs=init_bb_imgs()
         avx=vx*bb_accs[min(tmr//500,9)]
         avy=vy*bb_accs[min(tmr//500,9)]
         bb_img=bb_imgs[min(tmr//500,9)]
+
         bb_rct.move_ip(avx,avy)
         yoko,tate= check_bound(bb_rct)
         if not yoko:
@@ -128,7 +138,8 @@ def main():
         screen.blit(bb_img, bb_rct)
         if kk_rct.colliderect(bb_rct):
             gameover(screen)
-        
+        kk_img = get_kk_img((0, 0))
+        kk_img = get_kk_img(tuple(sum_mv))
         pg.display.update()
         tmr += 1
         clock.tick(50)
