@@ -1,5 +1,6 @@
 import os
 import random
+import time
 import sys
 import pygame as pg
 
@@ -20,6 +21,35 @@ def check_bound(rct: pg.rect) -> tuple[bool,bool]:
     if rct.top <0 or HEIGHT < rct.bottom:
         tate=False
     return yoko,tate
+
+def gameover(screen: pg.Surface)-> None:
+    # ブラックアウト
+    black= pg.Surface(screen.get_size())
+    black.set_alpha(150) 
+    screen.blit(black, (0, 0))
+    pg.draw.rect(black,(0,0,0),(0,0,WIDTH,HEIGHT))
+    
+
+    # こうかとん表示
+    kokaton_sad1 = pg.image.load("fig/8.png")
+    kokaton_rect1 = kokaton_sad1.get_rect(center=(370, 330))
+
+    kokaton_sad2 = pg.image.load("fig/8.png")
+    kokaton_rect2 = kokaton_sad2.get_rect(center=(740, 330))
+
+    screen.blit(kokaton_sad1, kokaton_rect1)
+    screen.blit(kokaton_sad2, kokaton_rect2)
+
+    # ゲームオーバー文字
+    font = pg.font.Font(None, 80)
+    text = font.render("Game Over", True, (255, 255, 255))
+    text_rect = text.get_rect(center=(550, 330 ))
+    screen.blit(text, text_rect)
+
+    pg.display.update()
+    time.sleep(5)
+
+
 
 
 
@@ -75,6 +105,8 @@ def main():
         if not tate:
             vy*=-1
         screen.blit(bb_img, bb_rct)
+        if kk_rct.colliderect(bb_rct):
+            gameover(screen)
         pg.display.update()
         tmr += 1
         clock.tick(50)
